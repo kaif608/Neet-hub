@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vectors Test - NEET Hub</title>
+<script>
+MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, Arial, sans-serif; -webkit-tap-highlight-color:transparent; }
+body { background:#f4f5f7; color:#1a1a1a; min-height:100vh; }
+.screen { display:none; min-height:100vh; }
+.screen.active { display:block; }
+
+/* ================= HOME ================= */
+#home-screen { background:#f4f5f7; padding:0; }
+.home-wrap { max-width:600px; margin:0 auto; padding:24px 20px; }
+.home-top { text-align:center; padding:30px 0 20px; }
+.home-top .badge {
+  display:inline-block; background:#e0e7ff; color:#4f46e5;
+  padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600;
+  letter-spacing:0.5px; margin-bottom:14px;
+}
+.home-top h1 { font-size:22px; font-weight:700; color:#111827; margin-bottom:6px; }
+.home-top .sub { font-size:13px; color:#6b7280; }
+.info-card {
+  background:#fff; border-radius:14px; padding:20px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06); border:1px solid #e5e7eb;
+  margin-bottom:16px;
+}
+.info-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f3f4f6; font-size:14px; }
+.info-row:last-child { border-bottom:none; }
+.info-row .label { color:#6b7280; }
+.info-row .value { color:#111827; font-weight:600; text-align:right; }
+.start-btn {
+  display:block; width:100%; background:#4f46e5; color:#fff;
+  padding:16px; border:none; border-radius:12px; font-size:16px; font-weight:700;
+  cursor:pointer; margin-top:12px; box-shadow:0 4px 14px rgba(79,70,229,0.3);
+}
+.start-btn:active { background:#4338ca; }
+.history-btn {
+  display:block; width:100%; background:#fff; color:#4f46e5;
+  padding:14px; border:1.5px solid #4f46e5; border-radius:12px;
+  font-size:15px; font-weight:600; cursor:pointer; margin-top:10px;
+}
+.history-btn:active { background:#eef2ff; }
+
+/* ================= TEST ================= */
+#test-screen { background:#f4f5f7; display:none; }
+#test-screen.active { display:flex; flex-direction:column; min-height:100vh; }
+.test-header {
+  background:#fff; padding:12px 14px; display:flex; justify-content:space-between;
+  align-items:center; border-bottom:1px solid #e5e7eb; position:sticky; top:0; z-index:50;
+}
+.test-header .info h3 { font-size:14px; color:#111827; font-weight:700; }
+.test-header .info p { font-size:11px; color:#6b7280; margin-top:2px; }
+.timer {
+  background:#fef2f2; color:#dc2626; padding:8px 12px;
+  border-radius:10px; font-size:14px; font-weight:700;
+  display:flex; align-items:center; gap:6px;
+}
+.timer.warn { background:#fef3c7; color:#d97706; }
+.timer.danger { background:#fee2e2; color:#dc2626; animation:pulse 1s infinite; }
+@keyframes pulse { 50% { opacity:0.6; } }
+.palette-toggle {
+  background:#4f46e5; color:#fff; border:none; padding:8px 12px;
+  border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;
+}
+.q-progress {
+  background:#fff; padding:8px 14px; font-size:12px; color:#6b7280;
+  border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between;
+}
+.q-progress .legend { display:flex; gap:10px; font-size:10px; }
+.q-progress .legend span::before { content:'●'; margin-right:3px; }
+.q-progress .legend .ans::before { color:#10b981; }
+.q-progress .legend .notans::before { color:#ef4444; }
+.q-progress .legend .notvis::before { color:#9ca3af; }
+.q-progress .legend .marked::before { color:#a855f7; }
+
+.q-area { flex:1; padding:16px; overflow-y:auto; }
+.q-card {
+  background:#fff; border-radius:14px; padding:18px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06); margin-bottom:14px;
+  overflow-x:auto; max-width:100%;
+}
+.q-num {
+  display:inline-block; background:#eef2ff; color:#4f46e5;
+  padding:3px 10px; border-radius:8px; font-size:12px; font-weight:700;
+  margin-bottom:12px;
+}
+.q-text {
+  font-size:18px; line-height:1.6; color:#111827; font-weight:500;
+  margin-bottom:16px; overflow-x:auto; max-width:100%; word-break:break-word;
+}
+.q-text table, .q-text .math { overflow-x:auto; max-width:100%; }
+.option {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:13px 14px; border:1.5px solid #e5e7eb; border-radius:10px;
+  margin-bottom:9px; cursor:pointer; transition:0.15s; background:#fff;
+  overflow-x:auto; max-width:100%;
+}
+.option:active { background:#f9fafb; }
+.option.selected { background:#eef2ff; border-color:#4f46e5; }
+.option .opt-letter {
+  min-width:26px; height:26px; background:#f3f4f6; color:#4b5563;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; flex-shrink:0;
+}
+.option.selected .opt-letter { background:#4f46e5; color:#fff; }
+.option .opt-text {
+  font-size:16px; line-height:1.5; color:#1f2937; padding-top:2px;
+  overflow-x:auto; max-width:100%; word-break:break-word;
+}
+
+.bottom-bar {
+  background:#fff; border-top:1px solid #e5e7eb; padding:10px 8px;
+  display:flex; gap:6px; position:sticky; bottom:0; z-index:50;
+  overflow-x:auto;
+}
+.bar-btn {
+  flex:1; min-width:60px; padding:10px 6px; border:1.5px solid #e5e7eb;
+  background:#fff; border-radius:10px; font-size:11px; font-weight:600;
+  color:#4b5563; cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; gap:3px; transition:0.15s;
+}
+.bar-btn:active { background:#f3f4f6; }
+.bar-btn svg { width:18px; height:18px; stroke:#4b5563; stroke-width:2.2; fill:none; }
+.bar-btn.primary { background:#4f46e5; color:#fff; border-color:#4f46e5; }
+.bar-btn.primary svg { stroke:#fff; }
+.bar-btn.mark { background:#a855f7; color:#fff; border-color:#a855f7; }
+.bar-btn.mark svg { stroke:#fff; }
+.bar-btn.submit { background:#059669; color:#fff; border-color:#059669; }
+.bar-btn.submit svg { stroke:#fff; }
+
+/* ================= PALETTE ================= */
+.palette-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.5);
+  display:none; z-index:200; justify-content:flex-end;
+}
+.palette-overlay.open { display:flex; }
+.palette {
+  background:#fff; width:280px; max-width:85%; height:100%;
+  padding:18px; overflow-y:auto;
+  box-shadow:-4px 0 20px rgba(0,0,0,0.2);
+}
+.palette h3 { font-size:15px; color:#111827; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; }
+.palette h3 span { font-size:20px; cursor:pointer; color:#6b7280; }
+.palette-legend { font-size:11px; color:#6b7280; margin-bottom:14px; line-height:1.8; }
+.palette-legend span { display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:5px; vertical-align:middle; }
+.palette-grid { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; }
+.pal-btn {
+  aspect-ratio:1; border:1.5px solid #d1d5db; background:#fff;
+  border-radius:8px; font-size:13px; font-weight:700; color:#374151;
+  cursor:pointer; position:relative;
+}
+.pal-btn.answered { background:#10b981; color:#fff; border-color:#10b981; }
+.pal-btn.notanswered { background:#ef4444; color:#fff; border-color:#ef4444; }
+.pal-btn.notvisited { background:#f3f4f6; color:#9ca3af; border-color:#e5e7eb; }
+.pal-btn.marked { background:#a855f7; color:#fff; border-color:#a855f7; }
+.pal-btn.marked::after { content:'●'; position:absolute; top:2px; right:2px; font-size:8px; color:#fff; }
+.pal-btn.current { box-shadow:0 0 0 3px #4f46e5; }
+
+/* ================= RESULT ================= */
+#result-screen { background:#f4f5f7; }
+.result-wrap { max-width:700px; margin:0 auto; padding:20px; }
+.result-header { text-align:center; padding:20px 0; }
+.result-header h2 { font-size:20px; color:#111827; }
+.result-header p { font-size:13px; color:#6b7280; margin-top:4px; }
+.score-big {
+  background:#4f46e5; color:#fff; border-radius:16px; padding:24px;
+  text-align:center; margin-bottom:16px;
+  box-shadow:0 4px 20px rgba(79,70,229,0.3);
+}
+.score-big .num { font-size:42px; font-weight:800; }
+.score-big .sub { font-size:13px; opacity:0.9; margin-top:4px; }
+.score-big .pct { font-size:14px; margin-top:6px; font-weight:600; }
+.stats-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:16px; }
+.stat-card { background:#fff; border-radius:12px; padding:14px; text-align:center; border:1px solid #e5e7eb; }
+.stat-card .n { font-size:22px; font-weight:700; }
+.stat-card .l { font-size:11px; color:#6b7280; margin-top:3px; text-transform:uppercase; letter-spacing:0.5px; }
+.stat-card.correct .n { color:#10b981; }
+.stat-card.wrong .n { color:#ef4444; }
+.stat-card.skipped .n { color:#6b7280; }
+.stat-card.time .n { color:#f59e0b; }
+
+.time-dash { background:#fff; border-radius:12px; padding:16px; margin-bottom:16px; border:1px solid #e5e7eb; }
+.time-dash h4 { font-size:14px; color:#111827; margin-bottom:12px; }
+.time-bar-row { margin-bottom:10px; font-size:12px; }
+.time-bar-row .head { display:flex; justify-content:space-between; margin-bottom:4px; color:#4b5563; }
+.time-bar-row .bar-wrap { background:#f3f4f6; height:8px; border-radius:4px; overflow:hidden; }
+.time-bar-row .bar-wrap > div { height:100%; border-radius:4px; }
+.time-bar-row .bar-wrap .g { background:#10b981; }
+.time-bar-row .bar-wrap .a { background:#f59e0b; }
+.time-bar-row .bar-wrap .r { background:#ef4444; }
+
+.filter-tabs { display:flex; gap:6px; margin-bottom:14px; overflow-x:auto; padding-bottom:4px; }
+.filter-tab {
+  padding:8px 14px; background:#fff; border:1.5px solid #e5e7eb;
+  border-radius:20px; font-size:12px; font-weight:600; color:#6b7280;
+  cursor:pointer; white-space:nowrap;
+}
+.filter-tab.active { background:#4f46e5; color:#fff; border-color:#4f46e5; }
+
+.review-card {
+  background:#fff; border-radius:12px; padding:16px; margin-bottom:12px;
+  border:1px solid #e5e7eb; border-left:4px solid #10b981;
+  overflow-x:auto; max-width:100%;
+}
+.review-card.wrong { border-left-color:#ef4444; }
+.review-card.skipped { border-left-color:#9ca3af; }
+.review-card.marked { border-left-color:#a855f7; }
+.review-head {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:10px; gap:10px;
+}
+.review-head .left .qnum { font-size:13px; font-weight:700; color:#4f46e5; }
+.review-head .left .chapter-tag { font-size:11px; color:#6b7280; margin-top:2px; }
+.review-head .right .time-badge {
+  background:#fef3c7; color:#92400e; padding:4px 10px;
+  border-radius:14px; font-size:11px; font-weight:700;
+}
+.review-q { font-size:16px; line-height:1.6; color:#111827; margin-bottom:12px; font-weight:500; overflow-x:auto; max-width:100%; }
+.review-opts .opt-review {
+  display:flex; gap:10px; padding:10px 12px; margin-bottom:6px;
+  border-radius:8px; border:1px solid #e5e7eb; font-size:15px;
+  overflow-x:auto; max-width:100%;
+}
+.review-opts .opt-review.correct { background:#ecfdf5; border-color:#10b981; color:#065f46; font-weight:600; }
+.review-opts .opt-review.user-wrong { background:#fef2f2; border-color:#ef4444; color:#991b1b; }
+.review-opts .opt-letter-sm {
+  min-width:22px; height:22px; border-radius:50%; background:#f3f4f6;
+  color:#4b5563; font-size:11px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.review-opts .opt-review.correct .opt-letter-sm { background:#10b981; color:#fff; }
+.review-opts .opt-review.user-wrong .opt-letter-sm { background:#ef4444; color:#fff; }
+
+.solution-box {
+  background:#f9fafb; border-radius:10px; padding:14px; margin-top:12px;
+  font-size:16px; line-height:1.7; color:#374151; overflow-x:auto;
+  max-width:100%; word-break:break-word;
+}
+.solution-box h5 {
+  font-size:13px; color:#4f46e5; text-transform:uppercase;
+  letter-spacing:0.5px; margin-bottom:10px; font-weight:700;
+}
+.solution-box strong { color:#111827; }
+.solution-box .final-ans {
+  display:inline-block; background:#10b981; color:#fff;
+  padding:4px 12px; border-radius:6px; font-weight:700; font-size:14px;
+  margin-top:8px;
+}
+
+.result-actions { display:flex; gap:10px; margin-top:16px; }
+.result-actions button {
+  flex:1; padding:14px; border-radius:12px; font-size:15px; font-weight:600;
+  cursor:pointer; border:none;
+}
+.result-actions .home-btn { background:#4f46e5; color:#fff; }
+.result-actions .retry-btn { background:#fff; color:#4f46e5; border:1.5px solid #4f46e5; }
+
+/* ================= HISTORY ================= */
+#history-screen { background:#f4f5f7; }
+.history-wrap { max-width:700px; margin:0 auto; padding:20px; }
+.history-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.history-top h2 { font-size:19px; color:#111827; }
+.history-top button {
+  background:#fff; border:1.5px solid #e5e7eb; color:#6b7280;
+  padding:8px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;
+}
+.history-top button.clear-btn { color:#dc2626; border-color:#fecaca; }
+.history-item {
+  background:#fff; border-radius:12px; padding:16px; margin-bottom:10px;
+  border:1px solid #e5e7eb; cursor:pointer; display:flex;
+  justify-content:space-between; align-items:center;
+}
+.history-item:active { background:#f9fafb; }
+.history-item .h-left .h-date { font-size:12px; color:#6b7280; }
+.history-item .h-left .h-score { font-size:16px; font-weight:700; color:#111827; margin-top:3px; }
+.history-item .h-right { text-align:right; }
+.history-item .h-right .h-pct { font-size:18px; font-weight:800; color:#4f46e5; }
+.history-item .h-right .h-acc { font-size:11px; color:#6b7280; }
+.empty-history { text-align:center; padding:60px 20px; color:#9ca3af; font-size:14px; }
+
+/* ================= MISC ================= */
+.submit-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.55);
+  display:none; justify-content:center; align-items:center; z-index:300; padding:20px;
+}
+.submit-overlay.open { display:flex; }
+.submit-box {
+  background:#fff; border-radius:16px; padding:24px; max-width:340px; width:100%;
+}
+.submit-box h3 { font-size:17px; color:#111827; margin-bottom:10px; }
+.submit-box p { font-size:13px; color:#6b7280; margin-bottom:18px; line-height:1.5; }
+.submit-box .btn-row { display:flex; gap:10px; }
+.submit-box button { flex:1; padding:12px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; border:none; }
+.submit-box .cancel-b { background:#f3f4f6; color:#374151; }
+.submit-box .confirm-b { background:#059669; color:#fff; }
+</style>
+</head>
+<body>
+
+<!-- ============ HOME SCREEN ============ -->
+<div id="home-screen" class="screen active">
+  <div class="home-wrap">
+    <div class="home-top">
+      <div class="badge">TARGET NEET 2027</div>
+      <h1>Physics — Vectors</h1>
+      <p class="sub">DPP 01 [Of Lec 02] • By Tanuj Bansal Sir</p>
+    </div>
+    <div class="info-card">
+      <div class="info-row"><span class="label">Subject</span><span class="value">Physics</span></div>
+      <div class="info-row"><span class="label">Chapter</span><span class="value">Vectors</span></div>
+      <div class="info-row"><span class="label">Topic</span><span class="value">Vector Addition & Basics</span></div>
+      <div class="info-row"><span class="label">Total Questions</span><span class="value">15</span></div>
+      <div class="info-row"><span class="label">Duration</span><span class="value">15 minutes</span></div>
+      <div class="info-row"><span class="label">Marking</span><span class="value">+4 / −1</span></div>
+    </div>
+    <button class="start-btn" onclick="startTest()">▶ Start Test</button>
+    <button class="history-btn" onclick="openHistory()">📊 Attempt History</button>
+  </div>
+</div>
+
+<!-- ============ TEST SCREEN ============ -->
+<div id="test-screen" class="screen">
+  <div class="test-header">
+    <div class="info">
+      <h3>Vectors Test</h3>
+      <p>Physics • 15 Questions</p>
+    </div>
+    <div class="timer" id="timer">⏱ 15:00</div>
+    <button class="palette-toggle" onclick="togglePalette()">☰</button>
+  </div>
+  <div class="q-progress">
+    <span id="q-progress-text">Question 1 of 15</span>
+    <div class="legend">
+      <span class="ans">Answered</span>
+      <span class="notans">Not Ans</span>
+      <span class="notvis">Not Visited</span>
+      <span class="marked">Marked</span>
+    </div>
+  </div>
+  <div class="q-area" id="q-area"></div>
+  <div class="bottom-bar">
+    <button class="bar-btn" onclick="prevQ()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Prev
+    </button>
+    <button class="bar-btn" onclick="clearAns()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Clear
+    </button>
+    <button class="bar-btn primary" onclick="saveNext()">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Save
+    </button>
+    <button class="bar-btn mark" onclick="markReview()">
+      <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Mark
+    </button>
+    <button class="bar-btn submit" onclick="openSubmit()">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Submit
+    </button>
+  </div>
+</div>
+
+<!-- ============ PALETTE ============ -->
+<div class="palette-overlay" id="palette-overlay" onclick="if(event.target===this) togglePalette()">
+  <div class="palette">
+    <h3>Question Palette <span onclick="togglePalette()">✕</span></h3>
+    <div class="palette-legend">
+      <span style="background:#10b981;"></span>Answered<br>
+      <span style="background:#ef4444;"></span>Not Answered<br>
+      <span style="background:#f3f4f6;"></span>Not Visited<br>
+      <span style="background:#a855f7;"></span>Marked for Review
+    </div>
+    <div class="palette-grid" id="palette-grid"></div>
+  </div>
+</div>
+
+<!-- ============ SUBMIT CONFIRM ============ -->
+<div class="submit-overlay" id="submit-overlay">
+  <div class="submit-box">
+    <h3>Submit Test?</h3>
+    <p id="submit-info">Are you sure you want to submit your test?</p>
+    <div class="btn-row">
+      <button class="cancel-b" onclick="closeSubmit()">Cancel</button>
+      <button class="confirm-b" onclick="submitTest()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="result-screen" class="screen">
+  <div class="result-wrap">
+    <div class="result-header">
+      <h2>Test Result</h2>
+      <p id="result-date">Vectors Test</p>
+    </div>
+    <div class="score-big">
+      <div class="num" id="score-num">0 / 60</div>
+      <div class="sub" id="score-sub">0 Correct • 0 Wrong • 0 Skipped</div>
+      <div class="pct" id="score-pct">0%</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card correct"><div class="n" id="st-correct">0</div><div class="l">Correct</div></div>
+      <div class="stat-card wrong"><div class="n" id="st-wrong">0</div><div class="l">Wrong</div></div>
+      <div class="stat-card skipped"><div class="n" id="st-skipped">0</div><div class="l">Skipped</div></div>
+      <div class="stat-card time"><div class="n" id="st-time">0s</div><div class="l">Total Time</div></div>
+    </div>
+    <div class="time-dash">
+      <h4>⏱ Time Per Question</h4>
+      <div id="time-bars"></div>
+    </div>
+    <div class="filter-tabs" id="filter-tabs">
+      <div class="filter-tab active" data-filter="all" onclick="setFilter('all')">All</div>
+      <div class="filter-tab" data-filter="correct" onclick="setFilter('correct')">Correct</div>
+      <div class="filter-tab" data-filter="wrong" onclick="setFilter('wrong')">Wrong</div>
+      <div class="filter-tab" data-filter="skipped" onclick="setFilter('skipped')">Skipped</div>
+      <div class="filter-tab" data-filter="marked" onclick="setFilter('marked')">Marked</div>
+    </div>
+    <div id="review-list"></div>
+    <div class="result-actions">
+      <button class="retry-btn" onclick="retryTest()">🔄 Retry</button>
+      <button class="home-btn" onclick="goHome()">🏠 Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HISTORY SCREEN ============ -->
+<div id="history-screen" class="screen">
+  <div class="history-wrap">
+    <div class="history-top">
+      <h2>Attempt History</h2>
+      <div style="display:flex; gap:8px;">
+        <button class="clear-btn" onclick="clearHistory()">Clear</button>
+        <button onclick="goHome()">Home</button>
+      </div>
+    </div>
+    <div id="history-list"></div>
+  </div>
+</div>
+
+<script>
+/* =================== QUIZ DATA =================== */
+const QUIZ_TITLE = "Vectors Test";
+const QUIZ_CHAPTER = "Vectors";
+const QUIZ_TOPIC = "Vector Addition & Basics";
+const QUIZ_SUBJECT = "Physics";
+const DURATION_SEC = 15 * 60;
+
+const quizData = [
+  {
+    id: 1,
+    chapter: "Vectors",
+    topic: "Vector Addition",
+    question: "Force $F_1$ and $F_2$ act on a point mass in two mutually perpendicular directions. The resultant force on the point mass will be",
+    options: [
+      "$F_1 + F_2$",
+      "$F_1 - F_2$",
+      "$\\sqrt{F_1^{2} + F_2^{2}}$",
+      "$F_1^{2} + F_2^{2}$"
+    ],
+    correct: 2,
+    image: null,
+    solution: "<strong>Concept:</strong> When two forces act at 90° (perpendicular), resultant is found using Pythagoras theorem.<br><br><strong>Given:</strong> $F_1$ and $F_2$ act at 90° to each other.<br><br><strong>Step 1:</strong> Formula for resultant at 90° is $R = \\sqrt{F_1^2 + F_2^2 + 2F_1 F_2 \\cos 90°}$<br><br><strong>Step 2:</strong> $\\cos 90° = 0$, so cross term vanishes.<br><br><strong>Step 3:</strong> $R = \\sqrt{F_1^2 + F_2^2}$<br><br><span class='final-ans'>Answer: (C)</span>"
+  },
+  {
+    id: 2,
+    chapter: "Vectors",
+    topic: "Vector Subtraction & Angle",
+    question: "If vectors $\\vec{P}$, $\\vec{Q}$ and $\\vec{R}$ have magnitudes 5, 12 and 13 units respectively and $\\vec{P} + \\vec{Q} = \\vec{R}$, then angle between $\\vec{Q}$ and $\\vec{R}$ is",
+    options: [
+      "$\\cos^{-1}\\frac{5}{12}$",
+      "$\\cos^{-1}\\frac{5}{13}$",
+      "$\\cos^{-1}\\frac{12}{13}$",
+      "$\\cos^{-1}\\frac{7}{13}$"
+    ],
+    correct: 2,
+    image: null,
+    solution: "<strong>Concept:</strong> If $\\vec{P}+\\vec{Q}=\\vec{R}$, then $\\vec{P}=\\vec{R}-\\vec{Q}$. Applying law of cosines between $\\vec{Q}$ and $\\vec{R}$.<br><br><strong>Given:</strong> $|\\vec{P}|=5$, $|\\vec{Q}|=12$, $|\\vec{R}|=13$<br><br><strong>Step 1:</strong> $|\\vec{P}|^2 = |\\vec{R}|^2 + |\\vec{Q}|^2 - 2|\\vec{R}||\\vec{Q}|\\cos\\theta$<br><br><strong>Step 2:</strong> $25 = 169 + 144 - 2(13)(12)\\cos\\theta$<br><br><strong>Step 3:</strong> $25 = 313 - 312\\cos\\theta \\Rightarrow 312\\cos\\theta = 288$<br><br><strong>Step 4:</strong> $\\cos\\theta = \\frac{288}{312} = \\frac{12}{13}$<br><br><span class='final-ans'>Answer: (C)</span>"
+  },
+  {
+    id: 3,
+    chapter: "Vectors",
+    topic: "Resultant Range",
+    question: "The vector sum of the forces of 10 newton and 6 newton can be",
+    options: ["2 N", "8 N", "18 N", "20 N"],
+    correct: 1,
+    image: null,
+    solution: "<strong>Concept:</strong> Resultant of two forces $A$ and $B$ lies between $|A-B|$ and $A+B$.<br><br><strong>Given:</strong> $A=10$ N, $B=6$ N<br><br><strong>Step 1:</strong> Minimum $= 10-6 = 4$ N<br><br><strong>Step 2:</strong> Maximum $= 10+6 = 16$ N<br><br><strong>Step 3:</strong> So resultant range = 4 N to 16 N.<br><br>Check options: 2 (no), <strong>8 (yes, in range)</strong>, 18 (no), 20 (no)<br><br><span class='final-ans'>Answer: (B)</span>"
+  },
+  {
+    id: 4,
+    chapter: "Vectors",
+    topic: "Resultant Range",
+    question: "Which of the following pair of forces will <strong>NEVER</strong> give a resultant force of $2$ N?",
+    options: ["2 N and 2 N", "1 N and 1 N", "1 N and 3 N", "1 N and 4 N"],
+    correct: 3,
+    image: null,
+    solution: "<strong>Concept:</strong> Check if 2 N lies within $[|A-B|, A+B]$ for each pair.<br><br><strong>Step 1:</strong> (2,2) → range [0,4] → 2 possible ✗<br><br><strong>Step 2:</strong> (1,1) → range [0,2] → 2 possible ✗<br><br><strong>Step 3:</strong> (1,3) → range [2,4] → 2 possible ✗<br><br><strong>Step 4:</strong> (1,4) → range [3,5] → 2 <strong>not possible</strong> ✓<br><br><span class='final-ans'>Answer: (D)</span>"
+  },
+  {
+    id: 5,
+    chapter: "Vectors",
+    topic: "Scalar Multiplication",
+    question: "What happens, when we multiply a vector by $(-2)$?",
+    options: [
+      "Direction reverses and unit changes",
+      "Direction reverses and magnitude is doubled",
+      "Direction remains unchanged and unit changes",
+      "None of these"
+    ],
+    correct: 1,
+    image: null,
+    solution: "<strong>Concept:</strong> Multiplying a vector by a negative scalar reverses its direction, and the magnitude gets multiplied by the scalar's absolute value.<br><br><strong>Step 1:</strong> Scalar = $-2$.<br><br><strong>Step 2:</strong> Negative sign → direction reverses.<br><br><strong>Step 3:</strong> $|{-2}| = 2$ → magnitude doubles.<br><br><strong>Step 4:</strong> Unit (dimension) remains the same.<br><br><span class='final-ans'>Answer: (B)</span>"
+  },
+  {
+    id: 6,
+    chapter: "Vectors",
+    topic: "Unit Vector",
+    question: "If $\\hat{n}$ is a unit vector in the direction of the vector $\\vec{A}$, then:",
+    options: [
+      "$\\hat{n} = \\frac{\\vec{A}}{|\\vec{A}|}$",
+      "$\\hat{n} = \\frac{|\\vec{A}|}{\\vec{A}}$",
+      "$\\hat{n} = \\frac{|\\vec{A}|}{\\vec{A}}$",
+      "None of the above"
+    ],
+    correct: 0,
+    image: null,
+    solution: "<strong>Concept:</strong> A unit vector along $\\vec{A}$ has magnitude 1 and same direction as $\\vec{A}$.<br><br><strong>Step 1:</strong> Unit vector = (Vector) / (Its magnitude)<br><br><strong>Step 2:</strong> So $\\hat{n} = \\frac{\\vec{A}}{|\\vec{A}|}$<br><br><strong>Step 3:</strong> This has magnitude 1 and direction same as $\\vec{A}$.<br><br><span class='final-ans'>Answer: (A)</span>"
+  },
+  {
+    id: 7,
+    chapter: "Vectors",
+    topic: "Vector & Scalar Basics",
+    question: "A physical quantity which has a direction:",
+    options: [
+      "Must be a vector",
+      "May be a vector",
+      "Must be a scalar",
+      "None of the above"
+    ],
+    correct: 1,
+    image: null,
+    solution: "<strong>Concept:</strong> Not every quantity with direction is a vector. It must also obey the laws of vector addition.<br><br><strong>Step 1:</strong> Example: electric current has direction but is a scalar.<br><br><strong>Step 2:</strong> So having direction alone doesn't guarantee a vector.<br><br><strong>Step 3:</strong> Hence the quantity <strong>may</strong> be a vector.<br><br><span class='final-ans'>Answer: (B)</span>"
+  },
+  {
+    id: 8,
+    chapter: "Vectors",
+    topic: "Pythagoras Vector Addition",
+    question: "The magnitude of vectors $\\vec{A}$, $\\vec{B}$ and $\\vec{C}$ are respectively 12, 5 and 13 units and $\\vec{A} + \\vec{B} = \\vec{C}$ then the angle between $\\vec{A}$ and $\\vec{B}$ is:",
+    options: ["$0$", "$\\pi/3$", "$\\pi/2$", "$\\pi/4$"],
+    correct: 2,
+    image: null,
+    solution: "<strong>Concept:</strong> $|\\vec{C}|^2 = |\\vec{A}|^2 + |\\vec{B}|^2 + 2|\\vec{A}||\\vec{B}|\\cos\\theta$<br><br><strong>Given:</strong> $|\\vec{A}|=12$, $|\\vec{B}|=5$, $|\\vec{C}|=13$<br><br><strong>Step 1:</strong> $169 = 144 + 25 + 2(12)(5)\\cos\\theta$<br><br><strong>Step 2:</strong> $169 = 169 + 120\\cos\\theta$<br><br><strong>Step 3:</strong> $120\\cos\\theta = 0 \\Rightarrow \\cos\\theta = 0$<br><br><strong>Step 4:</strong> $\\theta = \\pi/2 = 90°$<br><br><span class='final-ans'>Answer: (C)</span>"
+  },
+  {
+    id: 9,
+    chapter: "Vectors",
+    topic: "Maximum Resultant",
+    question: "For the resultant of the two vectors to be maximum, what must be the angle between them?",
+    options: ["$0^{\\circ}$", "$60^{\\circ}$", "$90^{\\circ}$", "$180^{\\circ}$"],
+    correct: 0,
+    image: null,
+    solution: "<strong>Concept:</strong> $R = \\sqrt{A^2 + B^2 + 2AB\\cos\\theta}$<br><br><strong>Step 1:</strong> $R$ is maximum when $\\cos\\theta$ is maximum.<br><br><strong>Step 2:</strong> Maximum value of $\\cos\\theta$ is $1$, which occurs at $\\theta = 0°$.<br><br><strong>Step 3:</strong> Then $R_{max} = A + B$.<br><br><span class='final-ans'>Answer: (A)</span>"
+  },
+  {
+    id: 10,
+    chapter: "Vectors",
+    topic: "Max & Min Resultant Ratio",
+    question: "If two vectors have magnitudes in the ratio 5 : 8, their resultant has maximum and minimum magnitudes in the ratio of...",
+    options: ["13 : 3", "3 : 1", "8 : 5", "6 : 5"],
+    correct: 0,
+    image: null,
+    solution: "<strong>Concept:</strong> For vectors $A$ and $B$, $R_{max} = A+B$ and $R_{min} = |A-B|$.<br><br><strong>Given:</strong> $A:B = 5:8$, so let $A=5k$, $B=8k$.<br><br><strong>Step 1:</strong> $R_{max} = 5k + 8k = 13k$<br><br><strong>Step 2:</strong> $R_{min} = 8k - 5k = 3k$<br><br><strong>Step 3:</strong> Ratio $= 13k : 3k = 13 : 3$<br><br><span class='final-ans'>Answer: (A)</span>"
+  },
+  {
+    id: 11,
+    chapter: "Vectors",
+    topic: "Maximum Resultant",
+    question: "Two forces of 12 N and 8 N act upon a body. The resultant force on the body has maximum value of:",
+    options: ["4 N", "0 N", "20 N", "8 N"],
+    correct: 2,
+    image: null,
+    solution: "<strong>Concept:</strong> Maximum resultant occurs when vectors are in same direction.<br><br><strong>Given:</strong> $F_1 = 12$ N, $F_2 = 8$ N<br><br><strong>Step 1:</strong> $R_{max} = F_1 + F_2$ (angle 0°)<br><br><strong>Step 2:</strong> $R_{max} = 12 + 8 = 20$ N<br><br><span class='final-ans'>Answer: (C)</span>"
+  },
+  {
+    id: 12,
+    chapter: "Vectors",
+    topic: "Resultant Angles",
+    question: "There are two force vectors, one of 5 N and other of 12 N. At what angle the two vectors be added to get resultant vector of 17 N, 7 N and 13 N respectively:",
+    options: [
+      "$0^{\\circ}$, $180^{\\circ}$ and $90^{\\circ}$",
+      "$0^{\\circ}$, $90^{\\circ}$ and $180^{\\circ}$",
+      "$0^{\\circ}$, $90^{\\circ}$ and $90^{\\circ}$",
+      "$180^{\\circ}$, $0^{\\circ}$ and $90^{\\circ}$"
+    ],
+    correct: 0,
+    image: null,
+    solution: "<strong>Concept:</strong> For $A=5$ N, $B=12$ N:<br><br><strong>Step 1:</strong> $R=17 = A+B$ → angle $0°$<br><br><strong>Step 2:</strong> $R=7 = |B-A| = 12-5$ → angle $180°$<br><br><strong>Step 3:</strong> $R=13 = \\sqrt{5^2+12^2}$ → angle $90°$<br><br><span class='final-ans'>Answer: (A)</span>"
+  },
+  {
+    id: 13,
+    chapter: "Vectors",
+    topic: "Net Force Range",
+    question: "A particle is simultaneously acted by two forces equal to 4 N and 3 N. The net force on the particle is:",
+    options: ["7 N", "5 N", "1 N", "Between 1 N and 7 N"],
+    correct: 3,
+    image: null,
+    solution: "<strong>Concept:</strong> Net force of two forces $A$ and $B$ lies between $|A-B|$ and $A+B$.<br><br><strong>Given:</strong> $A = 4$ N, $B = 3$ N<br><br><strong>Step 1:</strong> Minimum $= |4-3| = 1$ N<br><br><strong>Step 2:</strong> Maximum $= 4+3 = 7$ N<br><br><strong>Step 3:</strong> So net force is anywhere between 1 N and 7 N.<br><br><span class='final-ans'>Answer: (D)</span>"
+  },
+  {
+    id: 14,
+    chapter: "Vectors",
+    topic: "Perpendicular Forces",
+    question: "A particle is simultaneously acted by two forces equal to 8 N and 6 N. The net force on the particle, when angle between them is 90°, is:",
+    options: ["14 N", "5 N", "2 N", "10 N"],
+    correct: 3,
+    image: null,
+    solution: "<strong>Concept:</strong> At 90°, $R = \\sqrt{A^2 + B^2}$<br><br><strong>Given:</strong> $A = 8$ N, $B = 6$ N, $\\theta = 90°$<br><br><strong>Step 1:</strong> $R = \\sqrt{8^2 + 6^2}$<br><br><strong>Step 2:</strong> $R = \\sqrt{64 + 36} = \\sqrt{100}$<br><br><strong>Step 3:</strong> $R = 10$ N<br><br><span class='final-ans'>Answer: (D)</span>"
+  },
+  {
+    id: 15,
+    chapter: "Vectors",
+    topic: "Scalar Quantity",
+    question: "Which of the following is scalar?",
+    options: ["displacement", "electric field", "acceleration", "work"],
+    correct: 3,
+    image: null,
+    solution: "<strong>Concept:</strong> Scalar quantities have magnitude only, no direction.<br><br><strong>Step 1:</strong> Displacement → vector ✗<br><br><strong>Step 2:</strong> Electric field → vector ✗<br><br><strong>Step 3:</strong> Acceleration → vector ✗<br><br><strong>Step 4:</strong> Work = $\\vec{F} \\cdot \\vec{d}$ → dot product gives a scalar ✓<br><br><span class='final-ans'>Answer: (D)</span>"
+  }
+];
+
+/* =================== STATE =================== */
+let state = {
+  currentQ: 0,
+  answers: {},       // {qIndex: selectedOptionIndex}
+  marked: {},        // {qIndex: true}
+  visited: {},       // {qIndex: true}
+  timePerQ: {},      // {qIndex: seconds}
+  questionStartTime: Date.now(),
+  startTime: Date.now(),
+  timerInterval: null,
+  timeLeft: DURATION_SEC,
+  filter: 'all',
+  lastAttempt: null
+};
+
+/* =================== SCREEN SWITCH =================== */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* =================== TEST LOGIC =================== */
+function startTest() {
+  state.currentQ = 0;
+  state.answers = {};
+  state.marked = {};
+  state.visited = {};
+  state.timePerQ = {};
+  state.startTime = Date.now();
+  state.questionStartTime = Date.now();
+  state.timeLeft = DURATION_SEC;
+  state.visited[0] = true;
+
+  showScreen('test-screen');
+  renderQuestion();
+  renderPalette();
+  startTimer();
+}
+
+function startTimer() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  updateTimerDisplay();
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+    updateTimerDisplay();
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timerInterval);
+      autoSubmit();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const t = document.getElementById('timer');
+  const m = Math.floor(state.timeLeft / 60);
+  const s = state.timeLeft % 60;
+  t.textContent = '⏱ ' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  t.classList.remove('warn','danger');
+  if (state.timeLeft <= 60) t.classList.add('danger');
+  else if (state.timeLeft <= 300) t.classList.add('warn');
+}
+
+function renderQuestion() {
+  const i = state.currentQ;
+  const q = quizData[i];
+  let html = '<div class="q-card">';
+  html += '<div class="q-num">Q' + (i+1) + '</div>';
+  html += '<div class="q-text">' + q.question + '</div>';
+  if (q.image) {
+    html += '<img src="' + q.image + '" alt="Diagram" style="max-width:100%; height:auto; margin-bottom:10px; border-radius:8px;"><br>';
+  }
+  q.options.forEach((opt, idx) => {
+    const letter = ['A','B','C','D'][idx];
+    const sel = state.answers[i] === idx ? ' selected' : '';
+    html += '<div class="option' + sel + '" onclick="selectOpt(' + idx + ')">';
+    html += '<div class="opt-letter">' + letter + '</div>';
+    html += '<div class="opt-text">' + opt + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  document.getElementById('q-area').innerHTML = html;
+  document.getElementById('q-progress-text').textContent = 'Question ' + (i+1) + ' of ' + quizData.length;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([document.getElementById('q-area')]).catch(()=>{});
+  }
+
+  // track time
+  if (state.questionStartTime) {
+    const spent = Math.round((Date.now() - state.questionStartTime) / 1000);
+    state.timePerQ[i] = (state.timePerQ[i] || 0) + spent;
+  }
+  state.questionStartTime = Date.now();
+  state.visited[i] = true;
+  renderPalette();
+}
+
+function selectOpt(idx) {
+  state.answers[state.currentQ] = idx;
+  renderQuestion();
+}
+
+function clearAns() {
+  delete state.answers[state.currentQ];
+  renderQuestion();
+}
+
+function saveNext() {
+  if (state.currentQ < quizData.length - 1) {
+    state.currentQ++;
+    renderQuestion();
+  }
+}
+
+function prevQ() {
+  if (state.currentQ > 0) {
+    state.currentQ--;
+    renderQuestion();
+  }
+}
+
+function markReview() {
+  state.marked[state.currentQ] = !state.marked[state.currentQ];
+  renderPalette();
+  if (state.currentQ < quizData.length - 1) {
+    state.currentQ++;
+    renderQuestion();
+  }
+}
+
+function jumpTo(i) {
+  if (state.questionStartTime) {
+    const spent = Math.round((Date.now() - state.questionStartTime) / 1000);
+    state.timePerQ[state.currentQ] = (state.timePerQ[state.currentQ] || 0) + spent;
+  }
+  state.currentQ = i;
+  state.questionStartTime = Date.now();
+  state.visited[i] = true;
+  renderQuestion();
+  togglePalette();
+}
+
+function renderPalette() {
+  const grid = document.getElementById('palette-grid');
+  let html = '';
+  quizData.forEach((q, i) => {
+    let cls = 'pal-btn';
+    if (state.marked[i]) cls += ' marked';
+    else if (state.answers[i] !== undefined) cls += ' answered';
+    else if (state.visited[i]) cls += ' notanswered';
+    else cls += ' notvisited';
+    if (i === state.currentQ) cls += ' current';
+    html += '<button class="' + cls + '" onclick="jumpTo(' + i + ')">' + (i+1) + '</button>';
+  });
+  grid.innerHTML = html;
+}
+
+function togglePalette() {
+  document.getElementById('palette-overlay').classList.toggle('open');
+}
+
+/* =================== SUBMIT =================== */
+function openSubmit() {
+  const ans = Object.keys(state.answers).length;
+  const marked = Object.values(state.marked).filter(Boolean).length;
+  document.getElementById('submit-info').textContent =
+    'Answered: ' + ans + ' | Marked: ' + marked + ' | Total: ' + quizData.length;
+  document.getElementById('submit-overlay').classList.add('open');
+}
+function closeSubmit() {
+  document.getElementById('submit-overlay').classList.remove('open');
+}
+function autoSubmit() {
+  if (state.questionStartTime) {
+    const spent = Math.round((Date.now() - state.questionStartTime) / 1000);
+    state.timePerQ[state.currentQ] = (state.timePerQ[state.currentQ] || 0) + spent;
+  }
+  finishTest();
+}
+function submitTest() {
+  closeSubmit();
+  if (state.questionStartTime) {
+    const spent = Math.round((Date.now() - state.questionStartTime) / 1000);
+    state.timePerQ[state.currentQ] = (state.timePerQ[state.currentQ] || 0) + spent;
+  }
+  finishTest();
+}
+
+function finishTest() {
+  clearInterval(state.timerInterval);
+
+  let correct = 0, wrong = 0, skipped = 0;
+  quizData.forEach((q, i) => {
+    if (state.answers[i] === undefined) skipped++;
+    else if (state.answers[i] === q.correct) correct++;
+    else wrong++;
+  });
+  const totalMarks = correct * 4 - wrong * 1;
+  const maxMarks = quizData.length * 4;
+  const totalTime = Math.round((Date.now() - state.startTime) / 1000);
+
+  const attempt = {
+    id: Date.now(),
+    date: new Date().toLocaleString(),
+    title: QUIZ_TITLE,
+    correct, wrong, skipped,
+    marks: totalMarks,
+    maxMarks,
+    pct: Math.round((totalMarks / maxMarks) * 100),
+    totalTime,
+    answers: {...state.answers},
+    marked: {...state.marked},
+    timePerQ: {...state.timePerQ}
+  };
+
+  state.lastAttempt = attempt;
+  saveAttempt(attempt);
+  showResult(attempt);
+}
+
+/* =================== RESULT =================== */
+function showResult(attempt) {
+  document.getElementById('result-date').textContent = attempt.date;
+  document.getElementById('score-num').textContent = attempt.marks + ' / ' + attempt.maxMarks;
+  document.getElementById('score-sub').textContent =
+    attempt.correct + ' Correct • ' + attempt.wrong + ' Wrong • ' + attempt.skipped + ' Skipped';
+  document.getElementById('score-pct').textContent = attempt.pct + '%';
+  document.getElementById('st-correct').textContent = attempt.correct;
+  document.getElementById('st-wrong').textContent = attempt.wrong;
+  document.getElementById('st-skipped').textContent = attempt.skipped;
+  document.getElementById('st-time').textContent = formatTime(attempt.totalTime);
+
+  // time bars
+  let tb = '';
+  quizData.forEach((q, i) => {
+    const t = attempt.timePerQ[i] || 0;
+    const maxT = Math.max(...Object.values(attempt.timePerQ), 1);
+    const w = Math.min(100, Math.round((t / maxT) * 100));
+    let cls = 'g';
+    if (t > 90) cls = 'r';
+    else if (t > 60) cls = 'a';
+    tb += '<div class="time-bar-row"><div class="head"><span>Q' + (i+1) + '</span><span>' + t + 's</span></div><div class="bar-wrap"><div class="' + cls + '" style="width:' + w + '%"></div></div></div>';
+  });
+  document.getElementById('time-bars').innerHTML = tb;
+
+  state.filter = 'all';
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === 'all'));
+  renderReview(attempt);
+  showScreen('result-screen');
+}
+
+function setFilter(f) {
+  state.filter = f;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === f));
+  renderReview(state.lastAttempt);
+}
+
+function renderReview(attempt) {
+  const list = document.getElementById('review-list');
+  let html = '';
+  quizData.forEach((q, i) => {
+    const userAns = attempt.answers[i];
+    const isCorrect = userAns === q.correct;
+    const isSkipped = userAns === undefined;
+    const isMarked = attempt.marked[i];
+
+    if (state.filter === 'correct' && !isCorrect) return;
+    if (state.filter === 'wrong' && (isCorrect || isSkipped)) return;
+    if (state.filter === 'skipped' && !isSkipped) return;
+    if (state.filter === 'marked' && !isMarked) return;
+
+    let cardCls = 'review-card';
+    if (isSkipped) cardCls += ' skipped';
+    else if (!isCorrect) cardCls += ' wrong';
+
+    html += '<div class="' + cardCls + '">';
+    html += '<div class="review-head"><div class="left">';
+    html += '<div class="qnum">Q' + (i+1) + (isMarked ? ' 🔖' : '') + '</div>';
+    html += '<div class="chapter-tag">' + q.chapter + ' — ' + q.topic + '</div>';
+    html += '</div><div class="right"><div class="time-badge">⏱ ' + (attempt.timePerQ[i] || 0) + 's</div></div></div>';
+
+    html += '<div class="review-q">' + q.question + '</div>';
+    if (q.image) html += '<img src="' + q.image + '" style="max-width:100%; height:auto; margin-bottom:10px; border-radius:8px;"><br>';
+
+    html += '<div class="review-opts">';
+    q.options.forEach((opt, idx) => {
+      let cls = 'opt-review';
+      if (idx === q.correct) cls += ' correct';
+      else if (idx === userAns) cls += ' user-wrong';
+      const letter = ['A','B','C','D'][idx];
+      html += '<div class="' + cls + '"><div class="opt-letter-sm">' + letter + '</div><div>' + opt + '</div></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="solution-box"><h5>💡 Solution</h5>' + q.solution + '</div>';
+    html += '</div>';
+  });
+  if (!html) html = '<div class="empty-history">Koi question is filter mein nahi.</div>';
+  list.innerHTML = html;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([list]).catch(()=>{});
+  }
+}
+
+function formatTime(s) {
+  const m = Math.floor(s/60); const sec = s%60;
+  return m + 'm ' + sec + 's';
+}
+
+/* =================== HISTORY (IndexedDB + localStorage) =================== */
+const DB_NAME = 'neet_mock_persistent_db';
+const STORE = 'attempts';
+let db = null;
+
+function openDB() {
+  return new Promise((resolve) => {
+    try {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = (e) => {
+        const d = e.target.result;
+        if (!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE, { keyPath: 'id' });
+      };
+      req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+      req.onerror = () => resolve(null);
+    } catch(e) { resolve(null); }
+  });
+}
+
+async function saveAttempt(attempt) {
+  const d = db || await openDB();
+  if (d) {
+    try {
+      const tx = d.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).put(attempt);
+    } catch(e) {}
+  }
+  // localStorage fallback
+  try {
+    const arr = JSON.parse(localStorage.getItem(DB_NAME) || '[]');
+    arr.push(attempt);
+    localStorage.setItem(DB_NAME, JSON.stringify(arr));
+  } catch(e) {}
+}
+
+async function getAttempts() {
+  const d = db || await openDB();
+  if (d) {
+    try {
+      return await new Promise((resolve) => {
+        const tx = d.transaction(STORE, 'readonly');
+        const req = tx.objectStore(STORE).getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => resolve([]);
+      });
+    } catch(e) {}
+  }
+  try { return JSON.parse(localStorage.getItem(DB_NAME) || '[]'); } catch(e) { return []; }
+}
+
+async function clearHistory() {
+  if (!confirm('Saari history clear karni hai?')) return;
+  const d = db || await openDB();
+  if (d) {
+    try {
+      const tx = d.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).clear();
+    } catch(e) {}
+  }
+  localStorage.removeItem(DB_NAME);
+  openHistory();
+}
+
+async function openHistory() {
+  const list = document.getElementById('history-list');
+  list.innerHTML = '<div class="empty-history">Loading...</div>';
+  showScreen('history-screen');
+  const arr = (await getAttempts()).sort((a,b) => b.id - a.id);
+  if (!arr.length) {
+    list.innerHTML = '<div class="empty-history">Abhi koi attempt nahi hai.</div>';
+    return;
+  }
+  let html = '';
+  arr.forEach(a => {
+    html += '<div class="history-item" onclick="viewAttempt(' + a.id + ')">';
+    html += '<div class="h-left"><div class="h-date">' + a.date + '</div><div class="h-score">' + a.marks + ' / ' + a.maxMarks + '</div></div>';
+    html += '<div class="h-right"><div class="h-pct">' + a.pct + '%</div><div class="h-acc">' + a.correct + '✓ ' + a.wrong + '✗ ' + a.skipped + '–</div></div>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+async function viewAttempt(id) {
+  const arr = await getAttempts();
+  const a = arr.find(x => x.id === id);
+  if (a) {
+    state.lastAttempt = a;
+    showResult(a);
+  }
+}
+
+function retryTest() {
+  startTest();
+}
+function goHome() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  showScreen('home-screen');
+}
+
+/* =================== KEYBOARD =================== */
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('test-screen').classList.contains('active')) return;
+  if (e.key >= '1' && e.key <= '4') {
+    selectOpt(parseInt(e.key) - 1);
+  } else if (e.key === 'ArrowRight') saveNext();
+  else if (e.key === 'ArrowLeft') prevQ();
+});
+
+/* =================== INIT =================== */
+openDB();
+</script>
+
+</body>
+  </html>
